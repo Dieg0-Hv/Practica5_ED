@@ -50,23 +50,49 @@ class Arbol:
 
     def es_vacio(self):
         """Devuelve True si el árbol es vacío, y False en otro caso."""
-        return False
+        # Si la raiz del arbol no existe, entonces se
+        # considera vacio, ya que izquierdo y derecho son arboles vacios Arbol(),
+        # no son None.
+        # (problema de logica inicial solucionado considerando solo a raiz).
+        #if self.raiz is None:
+        #    return True
+        #return False
+        return self.raiz is None
 
 
     def es_hoja(self):
         """Devuelve True si el árbol tiene un único nodo, y False en otro caso.
         """
-        return False
-
+        # Checa si la raiz existe, o sea, no es vacia, y tambien si derecho e izquierdo
+        # son vacios. De ser asi, es una hoja.
+        return not self.es_vacio() and self.derecho.es_vacio() and self.izquierdo.es_vacio()
 
     def copia(self):
         """Devuelve un nuevo árbol idéntico a este."""
-        return Arbol()
-
+        # Si el arbol es completamente vacio, o sea, no tiene ningun elemento,
+        # regresa un arbol sin nada.
+        if self.es_vacio():
+            return Arbol()
+        # Crear un nuevo arbol sin elementos.
+        # nuevo_arbol = Arbol()
+        # La raiz de este nuevo arbol sera la misma.
+        # nuevo_arbol.raiz = self.raiz
+        # En los nodos derecho e izquierdo se aplica el caso recursivo, al ser
+        # estos arboles tambien.
+        # nuevo_arbol.derecho = self.derecho.copia()
+        # nuevo_arbol.izquierdo = self.izquierdo.copia()
+        ## OPTIMIZACION DE CODIGO
+        return Arbol(self.raiz,self.izquierdo.copia(),self.derecho.copia())
 
     def num_nodos(self):
         """Devuelve el número de nodos en el árbol."""
-        return 0
+        # Si un nodo ya no existe, regresar 0.
+        if self.es_vacio():
+            return 0
+        else:
+        # De otro modo regresar 1 (el nodo actual) mas los casos recursivos en
+        # izquierda y derecha.
+            return 1 + self.derecho.num_nodos() + self.izquierdo.num_nodos()
 
 
     def direccion(self, elemento):
