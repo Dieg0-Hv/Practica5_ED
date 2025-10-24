@@ -1,3 +1,9 @@
+ #Universidad Nacional Autónoma de México
+ #Facultad de Ciencias
+ #Licenciatura en Ciencias de la Computación
+ #Estructuras Discretas 
+ #Practica5
+ #Escrito por: Hernandez Vazquez Diego y Bruno Bernardo Soto Lugo
 class Arbol:
     """Clase para representar árboles binarios recursivos. La variable 'raiz'
     es un elemento, 'izquierdo' es un árbol y 'derecho' es un árbol.
@@ -44,8 +50,19 @@ class Arbol:
         (6
         ø
         ø)))
-        """
-        return ""
+         """
+        def _repr(nodo, indent):
+            if nodo.es_vacio():
+                return indent + "ø"
+            # línea de la raíz
+            s = indent + "(" + str(nodo.raiz) + "\n"
+            # representación del izquierdo con mayor indentación
+            s += _repr(nodo.izquierdo, indent + "  ") + "\n"
+            # representación del derecho con mayor indentación
+            s += _repr(nodo.derecho, indent + "  ") + ")"
+            return s
+
+        return _repr(self, "")
 
 
     def es_vacio(self):
@@ -100,7 +117,22 @@ class Arbol:
         dirección (en binario) del primer nodo del árbol (en un recorrido
         in-order) que contenga al elemento.   En otro caso devuelve False.
         """
-        return ""
+        def _helper(nodo, path):
+            if nodo.es_vacio():
+                return False
+            # Va de orden -> izquierdo, raiz, derecho
+            left = _helper(nodo.izquierdo, path + "0")
+            if left is not False:
+                return left
+            if nodo.raiz == elemento:
+                return path
+            right = _helper(nodo.derecho, path + "1")
+            if right is not False:
+                return right
+            return False
+
+        return _helper(self, "")
+
 
 
     def gira(self, direccion):
@@ -111,11 +143,57 @@ class Arbol:
         corresponde a un nodo del árbol, se devuelve una copia del árbol
         original.
         """
-        return Arbol()
+        copia = self.copia()
+        # Si el árbol es vacío o la copia es vacía
+        # regresamos la copia sin cambios
+        if copia.es_vacio():
+            return copia
 
+        # Si la dirección es la cadena vacía
+        # giramos la raíz del árbol
+        if direccion == "":
+            copia.izquierdo, copia.derecho = copia.derecho, copia.izquierdo
+            return copia
 
-    def es_isomorfo(self, arbol):
-        """Compara dos árboles binarios y devuelve True si son isomorfos,
-        False en otro caso.
-        """
+        nodo = copia
+        for bit in direccion:
+            if bit == "0":
+                # ir a la izquierda
+                if nodo.izquierdo.es_vacio():
+                    # dirección inválida -> devolver
+                    return copia
+                nodo = nodo.izquierdo
+            elif bit == "1":
+                # ir a la derecha
+                if nodo.derecho.es_vacio():
+                    return copia
+                nodo = nodo.derecho
+            else:
+                # carácter inválido -> devolver
+                return copia
+
+        # Si llegamos a un nodo válido giramos
+        # sus hijos intercambiándolos
+        if nodo.es_vacio():
+            return copia
+        nodo.izquierdo, nodo.derecho = nodo.derecho, nodo.izquierdo
+        return copia
+
+def es_isomorfo(self, arbol):
+    """Compara dos árboles binarios y devuelve True si son isomorfos,
+    False en otro caso.
+    """
+    # Si ambos arboles son vacios, son isomorfos
+    if self.es_vacio() and arbol.es_vacio():
+        return True
+    # Si uno de los dos es vacio, no son isomorfos
+    if self.es_vacio() or arbol.es_vacio():
         return False
+    # Si las raíces no coinciden, no pueden ser isomorfos
+    if self.raiz != arbol.raiz:
+        return False
+    # Checar si los subarboles izquierdo y derecho son isomorfos
+    return ((self.izquierdo.es_isomorfo(arbol.izquierdo) and
+             self.derecho.es_isomorfo(arbol.derecho)) or
+            (self.izquierdo.es_isomorfo(arbol.derecho) and
+             self.derecho.es_isomorfo(arbol.izquierdo)))
