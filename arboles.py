@@ -67,21 +67,18 @@ class Arbol:
 
     def es_vacio(self):
         """Devuelve True si el árbol es vacío, y False en otro caso."""
-        # Si la raiz del arbol no existe, entonces se
-        # considera vacio, ya que izquierdo y derecho son arboles vacios Arbol(),
-        # no son None.
-        # (problema de logica inicial solucionado considerando solo a raiz).
-        #if self.raiz is None:
-        #    return True
-        #return False
+        # Regresa True si el árbol no tiene ningún elemento (raiz = None, izquierdo = None, derecho = None).
+        # Segun el constructor, si raiz = None, entonces izquierdo y derecho también lo son.
+        # Asi, solo se checa si raiz = None.
         return self.raiz is None
 
 
     def es_hoja(self):
         """Devuelve True si el árbol tiene un único nodo, y False en otro caso.
         """
-        # Checa si la raiz existe, o sea, no es vacia, y tambien si derecho e izquierdo
-        # son vacios. De ser asi, es una hoja.
+        # Verifica si los dos hijos, derecho e izquierdo, son vacios.
+        # De ser asi, es una hoja.
+        # Tambien verificamos que el arbol no sea completamente vacio para evitar una excepcion.
         return not self.es_vacio() and self.derecho.es_vacio() and self.izquierdo.es_vacio()
 
     def copia(self):
@@ -99,11 +96,12 @@ class Arbol:
         # nuevo_arbol.derecho = self.derecho.copia()
         # nuevo_arbol.izquierdo = self.izquierdo.copia()
         ## OPTIMIZACION DE CODIGO
+        # Se regresa un arbol con la misma raiz, y los casos recursivos en derecha e izquierda.
         return Arbol(self.raiz,self.izquierdo.copia(),self.derecho.copia())
 
     def num_nodos(self):
         """Devuelve el número de nodos en el árbol."""
-        # Si un nodo ya no existe, regresar 0.
+        # Si un nodo ya es vacio (no existe), regresar 0.
         if self.es_vacio():
             return 0
         else:
@@ -179,21 +177,21 @@ class Arbol:
         nodo.izquierdo, nodo.derecho = nodo.derecho, nodo.izquierdo
         return copia
 
-def es_isomorfo(self, arbol):
-    """Compara dos árboles binarios y devuelve True si son isomorfos,
-    False en otro caso.
-    """
-    # Si ambos arboles son vacios, son isomorfos
-    if self.es_vacio() and arbol.es_vacio():
-        return True
-    # Si uno de los dos es vacio, no son isomorfos
-    if self.es_vacio() or arbol.es_vacio():
-        return False
-    # Si las raíces no coinciden, no pueden ser isomorfos
-    if self.raiz != arbol.raiz:
-        return False
-    # Checar si los subarboles izquierdo y derecho son isomorfos
-    return ((self.izquierdo.es_isomorfo(arbol.izquierdo) and
-             self.derecho.es_isomorfo(arbol.derecho)) or
-            (self.izquierdo.es_isomorfo(arbol.derecho) and
-             self.derecho.es_isomorfo(arbol.izquierdo)))
+    def es_isomorfo(self, arbol):
+        """Compara dos árboles binarios y devuelve True si son isomorfos,
+        False en otro caso.
+        """
+        # Si ambos arboles son vacios, son isomorfos
+        if self.es_vacio() and arbol.es_vacio():
+            return True
+        # Si uno de los dos es vacio, no son isomorfos
+        if self.es_vacio() or arbol.es_vacio():
+            return False
+        # Si las raíces no coinciden, no pueden ser isomorfos
+        if self.raiz != arbol.raiz:
+            return False
+        # Checar si los subarboles izquierdo y derecho son isomorfos
+        return ((self.izquierdo.es_isomorfo(arbol.izquierdo) and
+                 self.derecho.es_isomorfo(arbol.derecho)) or
+                (self.izquierdo.es_isomorfo(arbol.derecho) and
+                 self.derecho.es_isomorfo(arbol.izquierdo)))
